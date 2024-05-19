@@ -1,38 +1,44 @@
 # install jenkins with java and run the jenkins service as cloud_user instend of the default jenkins user
-#step -1:
-->sudo groupadd jenkins #Creates a new group named "jenkins" to manage permissions for the Jenkins user and processes.
-#step2:
--> sudo su - #Switches to the root user for administrative privileges.
+#step -1: #Creates a new group named "jenkins" to manage permissions for the Jenkins user and processes.
+sudo groupadd jenkins 
+#step2: #Switches to the root user for administrative privileges.
+sudo su - 
 #step3:
--> sudo useradd -m -g jenkins -s /bin/bash jenkins
 #Creates a new user named "jenkins":
 #-m: Creates a home directory for the user.
 #-g jenkins: Assigns the user to the "jenkins" group.
 #-s /bin/bash: Sets the default shell to Bash.
-#step4:
-->sudo passwd jenkins  #sudo passwd jenkins
-#step5:
-->sudo su - jenkins #Switches to the "jenkins" user for subsequent commands.
-#step6:
-->sudo dnf install java-11-openjdk-devel -y  #Installs the Java Development Kit (JDK) version 11, required for running Jenkins.
-#step7:
--> sudo dnf config-manager --add-repo https://pkg.jenkins.io/redhat-stable/jenkins.repo   #Adds the official Jenkins repository to the package manager's sources.
-#step8:
-->sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key  #Imports the Jenkins GPG key to verify package authenticity.
-#step9:
--> sudo dnf install jenkins -y #install jenkins
-#step10:
--> sudo systemctl start jenkins #Starts the Jenkins service.
-step11:
--> sudo systemctl enable jenkins #Enables the Jenkins service to start automatically at boot.
-step12:
--> sudo firewall-cmd --permanent --zone=public --add-port=8080/tcp #Opens port 8080 in the firewall to allow access to the Jenkins web interface
-step13:
--> sudo firewall-cmd --reload #Reloads the firewall configuration to apply the changes.
 
-Note: add jenkins to visudo and give permissons as "ROOT"
--> sudo visudo
--> jenkins ALL=(ALL) ALL
+sudo useradd -m -g jenkins -s /bin/bash jenkins
+
+#step4: #sudo passwd jenkins
+
+sudo passwd jenkins 
+
+#step5:#Switches to the "jenkins" user for subsequent commands.
+sudo su - jenkins
+#step6:#Installs the Java Development Kit (JDK) version 11, required for running Jenkins.
+sudo dnf install java-11-openjdk-devel -y
+#step7: #Adds the official Jenkins repository to the package manager's sources.
+sudo dnf config-manager --add-repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+#step8:#Imports the Jenkins GPG key to verify package authenticity.
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+#step9:#install jenkins
+sudo dnf install jenkins -y
+#step10:#Starts the Jenkins service.
+sudo systemctl start jenkins
+#step11:#Enables the Jenkins service to start automatically at boot.
+sudo systemctl enable jenkins
+#step 12: install firewalld
+sudo dnf install firewalld -y
+sudo systemctl enable firewalld
+sudo systemctl start firewalld
+#step12:#Opens port 8080 in the firewall to allow access to the Jenkins web interface
+sudo firewall-cmd --permanent --zone=public --add-port=8080/tcp
+#step13:#Reloads the firewall configuration to apply the changes.
+sudo firewall-cmd --reload
+
+#Note: add jenkins to visudo and give permissons as "ROOT"
+#sudo visudo
+#jenkins ALL=(ALL) ALL
 #install firwall
-->sudo dnf install -y firewalld
-
