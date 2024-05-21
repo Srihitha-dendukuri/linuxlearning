@@ -1,0 +1,31 @@
+SSL Expiry Email Notification Script
+This document contains a Bash shell script designed to send an email notification 30 days before an SSL certificate expires. The script uses OpenSSL to check the certificate's expiry date and a mail utility to send the notification.
+
+#!/bin/bash
+
+# Variables
+HOST="www.google.com"
+PORT="443"
+RECIPIENT="your-email@example.com"
+SUBJECT="SSL Certificate Expiry Warning"
+BODY="The SSL certificate for $HOST on port $PORT is about to expire in less than 30 days."
+
+# Get the expiration date of the SSL certificate
+EXPIRY_DATE=$(echo | openssl s_client -connect $HOST:$PORT 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+
+# Convert the expiration date to seconds since the epoch
+EXPIRY_DATE_SECS=$(date -d "$EXPIRY_DATE" +%s)
+CURRENT_DATE_SECS=$(date +%s)
+
+# Calculate the difference in days
+DIFF_DAYS=$(( ($EXPIRY_DATE_SECS - $CURRENT_DATE_SECS) / 86400 ))
+
+# Check if the certificate expires in less than 30 days
+if [ $DIFF_DAYS -le 30 ]; then
+    echo "$BODY" | mail -s "$SUBJECT" "$RECIPIENT"
+fi
+
+#HOST: www.google.com
+#PORT: 443
+#RECIPIENT: your-email@example.com
+#SSL Certificate Expiry: Let's say the certificate for www.google.com expires on June 30, 2024.
