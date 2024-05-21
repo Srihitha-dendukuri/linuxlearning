@@ -20,3 +20,5 @@ openssl s_client -connect [hostname]:[port] -showcerts </dev/null | openssl x509
 openssl x509 -in your_certificate.pem -outform DER -out your_certificate.crt
 
 #This command converts the certificate from PEM (base64 encoded) to DER (binary) format and renames it to a .crt extension, as required by some systems.
+
+#generating, verification, expiration, installation, updation
